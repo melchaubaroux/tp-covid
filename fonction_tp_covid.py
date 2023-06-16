@@ -1,5 +1,5 @@
 import numpy as np
-
+import re 
    
 #------------------------- fonction d'observation des donnees------------------------
     
@@ -212,7 +212,7 @@ def encodage (tableau):
     
 #------------------------- fonction de suppression des donnees------------------------
                                                                                               
-def suppr_col_vide (tableau,condition=0,seuil=1) :
+def suppr_col_vide (tableau,seuil=1) :
     
     """supprime les colonnes vide d'un tableau 
 
@@ -233,22 +233,22 @@ def suppr_col_vide (tableau,condition=0,seuil=1) :
 
     col_a_suppr = [] 
        
-    for colonne in range (condition,nbcol):
+    for colonne in range (0,nbcol):
         count = 0
         for ligne in range (0,nblig) :
             if (tableau[ligne][colonne]==0):
                 count = count +1 
-        if  nblig*seuil < count  :
+        if  nblig*seuil <= count  :
             col_a_suppr.append(colonne)                         
     count=0
-    for i in  range(0,len(col_a_suppr)) :             # supprime les colonnes
-        tableau=np.delete(tableau,(col_a_suppr[i]-i),1)
+    for i in  range(len(col_a_suppr)-1,0,-1) :             # supprime les colonnes
+        tableau=np.delete(tableau,(col_a_suppr[i]),1)
         
     return tableau
 
 
 
-def suppr_lig_vide (tableau,condition=0,seuil=1) :
+def suppr_lig_vide (tableau,seuil=1) :
     
     """supprime les lignes vides d'un tableau 
 
@@ -271,15 +271,17 @@ def suppr_lig_vide (tableau,condition=0,seuil=1) :
     
     for ligne in range (0,nblig):
         count = 0
-        for colonne in range (condition,nbcol):
+        for colonne in range (0,nbcol):
             if (tableau[ligne][colonne]) == 0 :
                 count = count +1
-            if (nbcol-condition)*seuil < count :
-                lig_a_suppr.append(ligne)
+        if  nbcol*seuil <= count :
+            lig_a_suppr.append(ligne)
                 
-           
-    for i in  range(0,len(lig_a_suppr)) :  # supprime les lignes         
-        tableau=np.delete(tableau,(lig_a_suppr[i]-i),0)        
+                
+     
+    for i in  range(len(lig_a_suppr)-1,0,-1) :  # supprime les lignes         
+        tableau=np.delete(tableau,(lig_a_suppr[i]),0) 
+       
     return tableau
         
         
@@ -344,16 +346,27 @@ def test_colonnes(tableau,fonction):
             liste.append(somme)
         except:  
             print('fail at attempts',x)
-            for i in range (0,len(tableau[:,x])):
-                print(tableau[i,x] ,type(tableau[i,x]))
 
     return liste
                 
                 
                 
-#------------------------- fonction d affichage ------------------------                        
+#------------------------- fonction d affichage ------------------------     
 
-def affiche_element(dictionnaire,titre,tableau):
+def affiche_lignes (tableau,lst_lig,seuil_start=0,seuil_stop=100) :
+    nblig=tableau[:,1].size # recupere  dim col
+    nbcol=tableau[1,:].size # recupere  dim lig
+    
+    
+    for x in range(nblig):
+        if ((lst_lig[x]/len(tableau[1,:]))*100) > seuil_start :
+            if ((lst_lig[x]/len(tableau[1,:]))*100) < seuil_stop:
+                message = "ligne {} \n donnee manquantes {}  soit {} % ".format(x,lst_lig[x],(lst_lig[x]/len(tableau[1,:]))*100)
+                print (message)
+
+
+
+def affiche_features(dictionnaire,titre,tableau):
     nblig=tableau[:,1].size      
     element ={}
     count=0
@@ -363,8 +376,7 @@ def affiche_element(dictionnaire,titre,tableau):
     for k,v  in sorted(element.items(),key=lambda x: x[1]):
         print("%s: %s" % (round(v/nblig*100,2), titre[k]))                       
         
-    return dictionnaire
-
+    return 
 
 def affichage_label(tableau,titre) :
     
@@ -397,7 +409,9 @@ def affichage_label(tableau,titre) :
             for label in label_info[labels]:
                 if type(label)== str :
                     print(label,label_info[labels][label],end ='  ') 
-                else :
+                elif label==0:
+                    print(label,label_info[labels][label],end ='  ')
+                else:
                     nb_info += label_info[labels][label][0]                   
                     
             print('  nb_info  {} '.format(nb_info),'\n')      
