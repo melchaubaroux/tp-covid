@@ -1,11 +1,8 @@
 # tp-covid
-I Exploration des donnees
 
-
+ Exploration des donnees
 
     Analyse de Forme:
- 
- 
  
          .variable cible: SARS-Cov-2 exam result
          
@@ -15,21 +12,18 @@ I Exploration des donnees
              il y a principalement des resultats sanguin,viraux et urinaire
          
          .analyse de la qualite du dataset: 
-             il y a beaucoup de vide, des données mal type
-
-
+             il y a beaucoup de vide, des données mal typé
 
      
     Analyse de fond:
-        
-        
+                
          .les cas positif semblent plus localisé que les negatifs
          
-         .
+         .les données semblent avoir été standardisé en majorité
          
-         .
+         .beaucoup de donnée non pertinentes 
          
-         .
+         
 
 
 
